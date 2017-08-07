@@ -41,6 +41,7 @@
             canvas.onmousedown = this.handleMouseDown;
             canvas.onmousemove = this.handleMouseMove;
             canvas.onmouseup   = this.handleMouseUp;
+            canvas.onwheel     = this.handleMouseWheel;
         },
         computed: {
             showWinLev: function() {
@@ -52,7 +53,7 @@
         watch: {
             dcm_image: function() {
                 this.imageRender.showImage(this.dcm_image);
-                this.dcm_image.pRGBAImg = null;
+                //this.dcm_image.pRGBAImg = null;
             }
         },
         methods: {
@@ -100,6 +101,10 @@
                     this.mouseInfo.nCurrX = 0;
                     this.mouseInfo.snCurrY = 0;
                 }
+            },
+            handleMouseWheel(evt) {
+                let delta = Math.max(-1, Math.min(1, (evt.wheelDelta || -evt.detail)));
+                this.$emit('mouse_wheel', delta);
             }
         }
     }  

@@ -15,7 +15,8 @@
         <dcm-image-box ref="imgbox0"
             :dib_width="view_width"
             :dib_height="view_height"
-            :dcm_image="dcm_image">
+            :dcm_image="dcm_image"
+            @mouse_wheel="onMouseWheel">
         </dcm-image-box>
     </div>
 </template>
@@ -35,6 +36,11 @@ export default {
     data () {
         return {
             exams: [],
+            images: [],
+            currIdx: -1,
+            isLoading: false,
+            isShow: false,
+            viewTimer: null,
             view_width: 512,
             view_height: 512,
             dcm_image: null
@@ -56,17 +62,65 @@ export default {
             });
         },
         onSelectRow(row) {
-            console.log(row);
-            // window.axios({
-            //     method: 'get',
-            //     url: 'http://localhost:8090/image/file/' + row.id
-            // }).then((response) => {
-            //     //console.log(response);
-            //     this.dcm_image = null;
-            //     this.dcm_image = new DcmImageInfo();
-            //     this.dcm_image.setFromJson(response.data);
-            // })
-        }
+            console.log(row.ex_id);
+            window.axios({
+                method: 'get',
+                url: 'http://localhost:8090/image/exam/' + row.ex_id
+            }).then((response) => {
+                this.images = [];
+                this.currIdx = 0;
+                this.isLoading = false;
+                this.isShow = false;
+
+                response.data.forEach((item) => {
+                    item.dcmImage = new DcmImageInfo();
+                    this.images.push(item);
+                });
+                this.viewTimer = setInterval(this.showImage, 10);
+                //this.showImage(this.currIdx);
+            });
+        },
+        onMouseWheel(delta) {
+            //console.log(delta);
+            let idx = this.currIdx + delta;
+            if (idx < 0 || idx >= this.images.length)
+                return;
+
+            if (!this.isShow) return;
+
+            this.currIdx = idx;
+            this.isShow = false;
+            this.isLoading = false;
+            this.viewTimer = setInterval(this.showImage, 10);
+        },
+        showImage() {
+            if (this.isShow || this.isLoading 
+                || this.currIdx < 0 || this.currIdx >= this.images.length) {
+                return;
+            }
+
+            let tmpImage = this.images[this.currIdx];
+            if (tmpImage.dcmImage.bIsLoadedImage) {
+                this.dcm_image = tmpImage.dcmImage;  
+                this.isShow = true; 
+                clearInterval(this.viewTimer);
+                this.viewTimer = null;
+                return;
+            }
+            if (!tmpImage.dcmImage.bIsLoadedImage) {
+                this.isLoading = true;
+                window.axios({
+                    method: 'get',
+                    url: 'http://localhost:8090/image/file/' + tmpImage.id
+                }).then((response) => {
+                    //console.log(response);
+                    //this.dcm_image = null;
+                    //this.dcm_image = new DcmImageInfo();
+                   tmpImage.dcmImage.setFromJson(response.data);
+                   this.isLoading = false;
+                })
+            } 
+        } 
     }
 }
 </script>
