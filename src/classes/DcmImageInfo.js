@@ -20,7 +20,7 @@ class DicomImageInfo {
     }
 
     static __base64ToArrayBuffer(base64) {
-        let binary_string =  window.atob(base64);
+        let binary_string = atob(base64);
         let len = binary_string.length;
         let bytes = new Uint8Array( len );
         for (let i = 0; i < len; i++) {
