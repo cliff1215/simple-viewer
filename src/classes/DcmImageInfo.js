@@ -5,6 +5,15 @@ import * as DicomTag from './DicomTag';
 
 class DicomImageInfo {
     constructor() {
+        // the following properties for worker thread
+        this.threadStatus = -1; // -1: not start, 0: working, 1: terminate
+        this.threadError = 0; // 0: no error, < 0: error
+        //
+        // the following properties are used for checking 
+        // if the image that a workder thread gets and the request one are the same. 
+        this.tag = 0;
+        this.imgId = "";
+        //
         this.bIsLoadedImage = false;
         this.nWidth = 0;
         this.nHeight = 0;
