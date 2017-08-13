@@ -24,21 +24,21 @@ export const FSHADER_SOURCE = `
     uniform sampler2D u_Sampler;
     varying vec2 v_TexCoord;
     vec4 getGrayColor(vec4 color) {
-       float val = color.r * 256.0 + color.g * 256.0 * 256.0;
-       if (val < u_LowUpVal.x) {
-           return vec4(0.0, 0.0, 0.0, 1.0);
-       } else if (val >= u_LowUpVal.y) {
-           return vec4(1.0, 1.0, 1.0, 1.0);
-       } else {
-           val = ((val - u_LowUpVal.x) * 256.0 /
+        float val = color.r * 256.0 + color.g * 256.0 * 256.0;
+        if (val < u_LowUpVal.x) {
+            return vec4(0.0, 0.0, 0.0, 1.0);
+        } else if (val >= u_LowUpVal.y) {
+            return vec4(1.0, 1.0, 1.0, 1.0);
+        } else {
+            val = ((val - u_LowUpVal.x) * 256.0 /
                        (u_LowUpVal.y - u_LowUpVal.x)) / 256.0;
     	    if (val < 0.0) { val = 0.0; }
-           else if (val > 1.0) { val = 1.0; }
-           return vec4(val, val, val, 1.0);
-       }
+            else if (val > 1.0) { val = 1.0; }
+            return vec4(val, val, val, 1.0);
+        }
     }
     void main() {
-       vec4 color = texture2D(u_Sampler, v_TexCoord);
-       gl_FragColor = getGrayColor(color);
+        vec4 color = texture2D(u_Sampler, v_TexCoord);
+        gl_FragColor = getGrayColor(color);
     }
 `;
