@@ -3,7 +3,7 @@
 //
 import * as CuonUtils from './lib/cuon-utils.js';
 import {Matrix4, Vector3, Vector4} from './lib/cuon-matrix';
-import {VSHADER_SOURCE, FSHADER_SOURCE} from './shader-shource';
+import {VSHADER_SOURCE, FSHADER_SOURCE} from './shader-source';
 
 class ImageRender {
     constructor(canvas, numOfVertext = 4) {
