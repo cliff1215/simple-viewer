@@ -1,5 +1,6 @@
 <template>
     <div id="app" class="container">
+        <div class="col-xs-6">
         <hr/>
         <button class="btn btn-primary" 
                 @click="clickGetExamsInfo">
@@ -12,12 +13,15 @@
             @select_row="onSelectRow">
         </my-table>
         <hr/>
+        </div>
+        <div id="imgbox" class="col-xs-6" ref="imgbox">
         <dcm-image-box ref="imgbox0"
             :dib_width="view_width"
             :dib_height="view_height"
             :dcm_image="dcm_image"
             @mouse_wheel="onMouseWheel">
         </dcm-image-box>
+        </div>
     </div>
 </template>
 
@@ -45,6 +49,11 @@ export default {
             view_height: 512,
             dcm_image: null
         }
+    },
+    mounted() {
+        // console.log(this.$refs["imgbox"].offsetWidth);
+        this.view_width = this.$refs["imgbox"].offsetWidth - 20;
+        this.view_height = this.view_width;
     },
     methods: {
         clickGetExamsInfo() {
@@ -156,5 +165,10 @@ export default {
 </script>
 
 <style>
-
+#app {
+    width: 100%;
+}
+#imgbox {
+    margin-top: 4em;
+}
 </style>

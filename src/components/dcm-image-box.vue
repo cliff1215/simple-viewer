@@ -54,6 +54,11 @@
             dcm_image: function() {
                 this.imageRender.showImage(this.dcm_image);
                 //this.dcm_image.pRGBAImg = null;
+            },
+            dib_width: function() {
+                if (this.imageRender) {
+                    this.imageRender.resetViewPort(this.dib_width);
+                }
             }
         },
         methods: {

@@ -27,13 +27,20 @@ class ImageRender {
     clear() {
         this.webGL.clearColor(0.0, 0.0, 0.0, 1.0);
     }
+    // Reset the viewport of gl when the canvas width or height are changed.
+    // So, reseting the coordinate (-1.0 - 1.0)
+    resetViewPort(canvasWidth) {
+        this.webGL.canvas.width = canvasWidth;
+        this.webGL.canvas.height = canvasWidth;
+        this.webGL.viewport(0, 0, this.webGL.canvas.width, this.webGL.canvas.height);
+    }
 
     showImage(dcm_image) {
         if (!dcm_image || !dcm_image.bIsLoadedImage){
             console.log(dcm_image);
             return;
         }
-
+        
         // Set the vertex information
         // n is the number of vertex
         this.numberOfVertex = ImageRender.__initVertexBuffers(this.webGL);
