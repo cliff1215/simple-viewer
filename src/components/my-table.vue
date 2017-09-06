@@ -2,8 +2,8 @@
     <table class="table table-striped">
         <thead>
             <tr>
-                <th v-for="name in head_names" :key="name"> 
-                    {{ name }}
+                <th v-for="obj in head_names" :key="obj.prop"> 
+                    {{ obj.title }}
                 </th>
             </tr>
         </thead>
@@ -12,8 +12,8 @@
                 :class="{'info': row.selected }"
                 :key="index"
                 @click="clickImageTableRow(row)">
-                <td v-for="name in head_names" :key="name"> 
-                    {{ row[name] }}
+                <td v-for="obj in head_names" :key="obj.prop"> 
+                    {{ row[obj.prop] }}
                 </td>
             </tr>
         </tbody>

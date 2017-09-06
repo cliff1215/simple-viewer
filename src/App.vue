@@ -1,26 +1,26 @@
 <template>
-    <div id="app" class="container">
-        <div class="col-xs-6">
-        <hr/>
-        <button class="btn btn-primary" 
-                @click="clickGetExamsInfo">
-            Get Exam Info From DB
-        </button>
-        <hr/>
-        <my-table 
-            :head_names="[ 'pa_id', 'pa_name', 'pa_sex', 'ex_desc', 'ex_date', 'ex_modal', 'ex_bodypart', 'ex_images' ]"
-            :row_datas="exams"
-            @select_row="onSelectRow">
-        </my-table>
-        <hr/>
+    <div id="app" class="wrapper">
+        <div class="worklist">
+            <hr/>
+            <button class="btn btn-primary" 
+                    @click="clickGetExamsInfo">
+                Get Exam Info From DB
+            </button>
+            <hr/>
+            <my-table 
+                :head_names="tableHead"
+                :row_datas="exams"
+                @select_row="onSelectRow">
+            </my-table>
+            <hr/>
         </div>
-        <div id="imgbox" class="col-xs-6" ref="imgbox">
-        <dcm-image-box ref="imgbox0"
-            :dib_width="view_width"
-            :dib_height="view_height"
-            :dcm_image="dcm_image"
-            @mouse_wheel="onMouseWheel">
-        </dcm-image-box>
+        <div id="imgbox" class="image-view" ref="imgbox">
+            <dcm-image-box ref="imgbox0"
+                :dib_width="view_width"
+                :dib_height="view_height"
+                :dcm_image="dcm_image"
+                @mouse_wheel="onMouseWheel">
+            </dcm-image-box>
         </div>
     </div>
 </template>
@@ -39,11 +39,19 @@ export default {
     },
     data () {
         return {
+            //[ 'pa_id', 'pa_name', 'pa_sex', 'ex_desc', 'ex_date', 'ex_modal', 'ex_bodypart', 'ex_images' ]
+            tableHead: [
+                { title: 'ID', prop: 'pa_id' }, { title: 'Name', prop: 'pa_name' },
+                { title: 'Sex', prop: 'pa_sex' }, { title: 'Exam Name', prop: 'ex_desc' },
+                { title: 'Exam Date', prop: 'ex_date' }, { title: 'Modal', prop: 'ex_modal' },
+                { title: 'Bodypart', prop: 'ex_bodypart' }, { title: 'Images', prop: 'ex_images' }
+            ],
             exams: [],
             images: [],
             currImgIdx: -1,
             isShow: false,
             viewTimer: null,
+            timeInterval: 10,
             threadCnt: 4,
             view_width: 512,
             view_height: 512,
@@ -59,7 +67,8 @@ export default {
         clickGetExamsInfo() {
             window.axios({
                 method: 'get',
-                url: 'http://localhost:8090/exam'
+                //url: 'http://localhost:8090/exam'
+                url: 'http://localhost:3000/api/exam'
             }).then((response) => {
                 //console.log(response.data);
                 this.exams = [];
@@ -69,12 +78,24 @@ export default {
                     this.exams.push(exam);
                 });
             });
+            // fetch('http://localhost:3000/api/exam')
+            //     .then((response) => response.json())
+            //     .then((data) => {
+            //         //console.log(data);
+            //         this.exams = [];
+            //         let i = 0;
+            //         data.forEach((elmt) => {
+            //             let exam = new Exam(elmt, i++);
+            //             this.exams.push(exam);
+            //         });
+            //     });
         },
         onSelectRow(row) {
             console.log(row.ex_id);
             window.axios({
                 method: 'get',
-                url: 'http://localhost:8090/image/exam/' + row.ex_id
+                //url: 'http://localhost:8090/image/exam/' + row.ex_id
+                url: 'http://localhost:3000/api/image/exam/' + row.ex_id
             }).then((response) => {
                 this.images = [];
                 this.currImgIdx = 0;
@@ -86,9 +107,25 @@ export default {
                     item.dcmImage = new DcmImageInfo();
                     this.images.push(item);
                 });
-                this.viewTimer = setInterval(this.showImage, 10);
+                this.viewTimer = setInterval(this.showImage, this.timeInterval);
                 //this.showImage(this.currImgIdx);
             });
+            // fetch('http://localhost:3000/api/image/exam/' + row.ex_id)
+            // .then((res) => res.json())
+            // .then((data) => {
+            //     this.images = [];
+            //     this.currImgIdx = 0;
+            //     this.isShow = false;
+
+            //     let i = 0;
+            //     data.forEach((item) => {
+            //         item.tag = i++;
+            //         item.dcmImage = new DcmImageInfo();
+            //         this.images.push(item);
+            //     });
+            //     this.viewTimer = setInterval(this.showImage, this.timeInterval);
+            //     //this.showImage(this.currImgIdx);
+            // });
         },
         onMouseWheel(delta) {   // delta: +1 or -1
             //console.log(delta);
@@ -100,7 +137,7 @@ export default {
 
             this.currImgIdx = idx;
             this.isShow = false;
-            this.viewTimer = setInterval(this.showImage, 10);
+            this.viewTimer = setInterval(this.showImage, this.timeInterval);
         },
         showImage() {
             if (this.isShow 
@@ -165,10 +202,19 @@ export default {
 </script>
 
 <style>
-#app {
+.wrapper {
+    margin-top: 1em;
+    display: grid;
+    grid-template-columns: 0.9fr 1.1fr;
+}
+.worklist {
+    margin-left: 1em;
+    margin-right: 1em;
+}
+/* #app {
     width: 100%;
 }
 #imgbox {
     margin-top: 4em;
-}
+} */
 </style>
