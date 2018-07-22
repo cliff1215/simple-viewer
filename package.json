@@ -9,20 +9,27 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "vue": "^2.3.3"
+    "vue": "^2.5.16"
   },
   "devDependencies": {
     "axios": "^0.16.2",
-    "babel-core": "^6.0.0",
+    "babel-core": "^6.26.3",
     "babel-loader": "^6.0.0",
-    "babel-preset-env": "^1.5.1",
+    "babel-preset-env": "^1.7.0",
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
+    "eslint": "^5.1.0",
+    "eslint-config-airbnb-base": "^13.0.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^7.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
     "file-loader": "^0.9.0",
     "vue-loader": "^12.1.0",
-    "vue-template-compiler": "^2.3.3",
+    "vue-template-compiler": "^2.5.16",
     "webpack": "^2.6.1",
-    "webpack-dev-server": "^2.4.5",
+    "webpack-dev-server": "^2.11.2",
     "worker-loader": "^0.8.1"
   }
 }
